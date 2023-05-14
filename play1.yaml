@@ -1,0 +1,10 @@
+---
+- hosts: qaserver
+  become: True
+  ignore_errors: yes
+  tasks:
+  - name: creating directory
+    file:
+      path: /home/ec2-user
+      state: directory
+      mode: '0755'

@@ -11,5 +11,35 @@
         - unzip
         - wget
         - httpd
+      - name: Download code from github
+        get_url:
+        url: wget https://github.com/utrains/static-resume/archive/refs/heads/main.zip
+        dest: /tmp/main.zip
+        mode: '0644'
+        become: yes
+        become_user: ec2-user
+
+      - name: Unzip static-resume app
+        unarchive:
+        src: /tmp/main.zip
+        dest: /tmp
+        remote_src: yes
+        creates: /tmp/static-resume-main/iPortfolio/
+        become: yes
+        become_user: ec2-user
+
+      - name: Copy static-resume app files to web server directory
+        copy:
+        src: /tmp/static-resume-main/iPortfolio/
+        dest: /var/www/html/
+        remote_src: yes
+        become: yes
+        become_user: ec2-user
+
+      - name: start and enable service httpd
+        systemd:
+        name: httpd
+        state: started
+        enabled: yes
 
     
